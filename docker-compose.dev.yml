@@ -1,0 +1,67 @@
+version: '3.9'
+services:
+  client:
+    build: client
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./client:/usr/app
+      - /usr/app/build
+      - /usr/app/node_modules
+  games:
+    build: games
+    ports:
+      - '4001:4001'
+    volumes:
+      - ./games:/usr/app
+      - /usr/app/node_modules
+  event-bus:
+    build: event-bus
+    ports:
+      - '4005:4005'
+    volumes:
+      - ./event-bus:/usr/app
+      - /usr/app/node_modules
+  players:
+    build: players
+    ports:
+      - '4000:4000'
+    volumes:
+      - ./players:/usr/app
+      - /usr/app/node_modules
+  query:
+    build: query
+    ports:
+      - '4002:4002'
+    volumes:
+      - ./query:/usr/app
+      - /usr/app/node_modules
+
+  players-db:
+    image: mongo:latest
+    volumes:
+      - players-data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: secret
+  
+  games-db:
+    image: mongo:latest
+    volumes:
+      - games-data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: secret
+  
+  query-db:
+    image: mongo:latest
+    volumes:
+      - query-data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: secret
+
+volumes:
+  players-data:
+  games-data:
+  query-data:
